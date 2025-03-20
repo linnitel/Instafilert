@@ -14,6 +14,8 @@ import StoreKit
 struct ContentView: View {
 	@State private var processedImage: Image?
 	@State private var filterIntensity = 0.5
+	@State private var filterRadius = 0.5
+	@State private var filterScale = 0.5
 	@State private var selectedItem: PhotosPickerItem?
 	@State private var showingFilters = false
 
@@ -45,11 +47,25 @@ struct ContentView: View {
 				.onChange(of: selectedItem, loadImage)
 
 				Spacer()
-				HStack {
-					Text("Intencity")
-					Slider(value: $filterIntensity)
-						.onChange(of: filterIntensity, applyProcessing)
-						.disabled(disabledFilters)
+				VStack {
+					HStack {
+						Text("Intencity")
+						Slider(value: $filterIntensity)
+							.onChange(of: filterIntensity, applyProcessing)
+							.disabled(disabledFilters)
+					}
+					HStack {
+						Text("Radius")
+						Slider(value: $filterRadius)
+							.onChange(of: filterRadius, applyProcessing)
+							.disabled(disabledFilters)
+					}
+					HStack {
+						Text("Skale")
+						Slider(value: $filterScale)
+							.onChange(of: filterScale, applyProcessing)
+							.disabled(disabledFilters)
+					}
 				}
 				HStack {
 					Button("Change filter", action: changeFilter)
@@ -94,8 +110,8 @@ struct ContentView: View {
 		let inputKeys = currentFilter.inputKeys
 
 		if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
-		if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
-		if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey) }
+		if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterRadius * 200, forKey: kCIInputRadiusKey) }
+		if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterScale * 10, forKey: kCIInputScaleKey) }
 
 		guard let outputImage = currentFilter.outputImage else { return }
 		guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
